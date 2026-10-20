@@ -44,3 +44,8 @@ streamlit run app.py
 app.py     Streamlit app and recommendation logic
 model/     Pickled movie list (and similarity matrix once generated)
 ```
+
+
+---
+
+<sub>Made by [tanaytejush](https://github.com/tanaytejush)</sub>
