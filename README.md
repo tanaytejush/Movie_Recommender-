@@ -1,34 +1,46 @@
-# Movie_Recommender-
-This is a Python-based Movie Recommender System built using Streamlit for the user interface. It recommends movies based on the similarity of their content, using a machine learning model to find the most similar films.
+# Movie Recommender System
 
-Features -
-Content-Based Filtering: The system recommends movies that are similar to a selected movie based on their genre, cast, and keywords.
+A content-based **movie recommendation web app** built with Python and Streamlit. Pick a movie from the dropdown and get five similar films, each shown with its poster.
 
-Intuitive UI: A user-friendly web application created with Streamlit allows users to easily select a movie from a dropdown list and receive recommendations.
+## Features
 
-API Integration: It fetches movie posters from The Movie Database (TMDb) API to provide a visually appealing and informative user experience.
+- **Content-based filtering**: recommends movies similar to the selected one based on genre, cast and keywords
+- **Simple UI**: a Streamlit page with a searchable dropdown and a "Show Recommendation" button
+- **Movie posters** fetched from [The Movie Database (TMDb)](https://www.themoviedb.org/) API, with a placeholder when a poster is missing
 
-How It Works ⚙-
-The core of the system is a cosine similarity model. It works by:
+## How it works
 
-Data Preprocessing: Movie data (titles, genres, keywords, cast) is preprocessed and converted into a numerical representation.
+1. **Preprocessing**: titles, genres, keywords and cast are cleaned and combined into text per movie.
+2. **Vectorisation**: the text is converted into a TF-IDF matrix that captures how important each word is.
+3. **Similarity**: cosine similarity between every pair of movies produces a similarity matrix.
+4. **Recommendation**: for the selected movie, the app looks up its row in the matrix and returns the five most similar titles.
 
-Vectorization: The text data is transformed into a matrix of TF-IDF vectors to capture the importance of words.
+The pre-computed data is stored with `pickle`:
 
-Similarity Calculation: Cosine similarity is used to calculate the similarity scores between each movie, creating a similarity matrix.
+| File | Contents |
+|------|----------|
+| `model/movie_list.pkl` | DataFrame of movie titles and TMDb ids |
+| `model/similarity.pkl` | Cosine similarity matrix (**not included in this repo**, see below) |
 
-Recommendation Logic: When a user selects a movie, the system looks up its index in the similarity matrix and retrieves the movies with the highest similarity scores.
+## Tech stack
 
-Technologies Used -
-Python: The primary programming language.
+Python, Streamlit, scikit-learn, pandas, requests, pickle
 
-Streamlit: For creating the interactive web application.
+## Run it locally
 
-Scikit-learn: For machine learning tasks, including vectorization and similarity calculation.
+```bash
+pip install streamlit scikit-learn pandas requests
+streamlit run app.py
+```
 
-Pandas: For data manipulation and analysis.
+### Before you run
 
-Requests: For making API calls to fetch movie posters.
+- **Similarity matrix**: `app.py` loads `model/similarity.pkl`, which is not committed because of its size. Regenerate it from the TMDb 5000 movies dataset by running the vectorisation steps above and saving the result to `model/similarity.pkl`. Note the app looks in a folder named `model` (lowercase).
+- **TMDb API key**: poster fetching needs a free TMDb API key. Get one from your TMDb account settings and set it in `fetch_poster()` in `app.py`. Do not commit your key to a public repository.
 
-Pickle: To serialize and deserialize the pre-trained model and dataframes.
+## Project structure
 
+```
+app.py     Streamlit app and recommendation logic
+model/     Pickled movie list (and similarity matrix once generated)
+```
